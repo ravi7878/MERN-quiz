@@ -1,8 +1,8 @@
-import {ENTER_QUIZ,ENTER_QUIZ_FAIL,ENTER_QUIZ_SUCCESS, User ,QuizDispatchTypes} from "../Action/QuizActionType"
+import {ENTER_QUIZ,ENTER_QUIZ_FAIL,ENTER_QUIZ_SUCCESS, User,UserDetail ,QuizDispatchTypes} from "../Action/QuizActionType"
 
 interface DefaultState{
     loading: boolean,
-    user?: User,
+    user?: any,
    
 }
 
