@@ -132,7 +132,7 @@
   display: flex;
   justify-content: center;
 }
-input {
+.form > div > input {
   outline: none;
   border: none;
   border-radius: 35px;

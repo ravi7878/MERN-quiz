@@ -24,7 +24,7 @@ const UserReducer = (state:DefaultState = initialState,action:QuizDispatchTypes)
         case ENTER_QUIZ_SUCCESS:
             return {
                 loading:false,
-                // user:action.payload
+                user:action.payload
             }
         default : 
             return state
