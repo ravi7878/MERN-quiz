@@ -1,6 +1,7 @@
 export const ENTER_QUIZ = "ENTER_QUIZ"
 export const ENTER_QUIZ_FAIL = "ENTER_QUIZ_FAIL"
 export const ENTER_QUIZ_SUCCESS = "ENTER_QUIZ_SUCCESS"
+export const GET_QUIZ_DONE = "GET_QUIZ_DONE"
 
 export type UserDetail = {
     detail : {
@@ -26,5 +27,14 @@ export interface EnterQuizSuccess{
     payload:User
 }
 
-
-export type QuizDispatchTypes = EnterQuiz | EnterQuizFail | EnterQuizSuccess
+export type QuizDetail = {
+    quiz : []
+}
+export type QuizCompleted = {
+    quiz : QuizDetail[]
+}
+export interface GetQuizDone{
+    type : typeof GET_QUIZ_DONE,
+    payload:QuizCompleted
+}
+export type QuizDispatchTypes = EnterQuiz | EnterQuizFail | EnterQuizSuccess | GetQuizDone

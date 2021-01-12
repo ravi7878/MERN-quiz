@@ -7,7 +7,6 @@ import {useSelector} from "react-redux"
 import {RootStore} from "./Redux/Store"
 const App:React.FC = () =>  {
   const userState = useSelector((state:RootStore) => state)
-  console.log(userState)
   return (
     <Router>
   <div className="App">

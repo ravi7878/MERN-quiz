@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import {connect } from "react-redux"
 import "../Style/QuizPage.css"
-
+import {getUserQuizCompleted} from "../Redux/Action/QuizAction"
+import {bindActionCreators, Dispatch} from "redux"
   
 interface State {
     showLoader: boolean;
@@ -10,8 +11,9 @@ interface State {
     type:string
 }
 interface Props {
-
-
+    quiz:any,
+    user:any,
+    getUserQuizCompleted:any
 }
 
  class QuizEnter extends Component<Props, State>{
@@ -19,7 +21,7 @@ interface Props {
     {
         super(props);
        this.state = {
-            showLoader : true,
+            showLoader : false,
             count:null,
             difficulty:"",
             type:""
@@ -27,6 +29,15 @@ interface Props {
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChangeDifficulty = this.handleChangeDifficulty.bind(this)
+    }
+    componentDidMount()
+    {
+        const {user} = this.props.user
+        if(user)
+        {
+
+        this.props.getUserQuizCompleted(user.id)
+        }
     }
     handleChange (e:React.ChangeEvent<HTMLInputElement>) {
       this.setState({
@@ -39,33 +50,38 @@ interface Props {
         switch(e.target.name)
         {
              case "difficulty":
-                 console.log(e.target.value)    
+               
                  this.setState({
                      difficulty:e.target.value
                  })
                  break;
              case "type":
-                 console.log(e.target.value)    
- 
+               
                  this.setState({
                      type:e.target.value
                  })
                  break;
         }
     }
+    
     handleSubmit = () => {
-        console.log(this.state)
         this.setState({
             showLoader:true
         })
-        // this.props.userEnter("ravi","rkevadiya2@gmail.com")
     }
     render(): JSX.Element
     {
+        const {user,quiz} = this.props.user
+        
         return (
          
            <div className="quiz-page">
                <div className="quiz-container">
+               <div className="top-detail-bar">
+                   <div>Name :- {user && user.name}</div>
+                   <div>Email :- {user && user.email} </div>
+                   <div>Total Quiz :- {quiz && quiz.length}</div>
+               </div>
                <div className="top-search-bar">
                     <input className="quiz-input" name="count" value={this.state.count} onChange={this.handleChange} placeholder="Enter Question Count" type="number"/>
                    
@@ -84,14 +100,22 @@ interface Props {
                     <button className="btn-enter" onClick={this.handleSubmit}>Enter Quiz<span></span></button>
                </div>
                <div className="quiz-section">
-                  {this.state.showLoader && <div className="quiz-section-main"> 
+                  {this.state.showLoader ? <div className="quiz-section-main"> 
                     <div className="quiz-section-left">
-                        {/* <div className="quiz-left-upper">
-                        1
+                       <div className="quiz-left-upper">
+                            <div className="quiz-counter">
+                            {[1,2,3,4,5,6,7,8,9,10,11,12,14,1,2,3,4,5,6,7,8,9,10,11,12,14].map((data,index)=> {
+                                return(
+                                    <div key={index} className="count">
+                                        {index +1}
+                                    </div>
+                                )
+                            })}
+                            </div>
                         </div>
                         <div>
-                            2
-                        </div> */}
+                           
+                        </div>
                     </div>
                     <div className="quiz-section-right">
                         <div className="quiz-right-inner">
@@ -119,14 +143,49 @@ interface Props {
                             </div>
                             <div className="quiz-action">
                                 <div>
-                                    <button className="btn-next" onClick={()=>{console.log("123")}}>Submit<span></span></button>
+                                    <button className="btn-next" onClick={()=>{console.log("123")}}>Next<span></span></button>
                                     <button className="btn-skip" onClick={this.handleSubmit}>Skip<span></span></button>
                                    
                                 </div>
                             </div>
                         </div>
                     </div> 
-                  </div> }
+                  </div> : 
+                   <div className="quiz-result">
+                        
+                       <table>
+                           <thead>
+                               <tr>
+                                   <td colSpan={6}>PREVIOUS QUIZ RESULT </td>
+                               </tr>
+                               <tr>
+                                   <th>Id</th>
+                                   <th>Catagory</th>
+                                   <th>Difficulty</th>
+                                   <th>Total Quesions</th>
+                                   <th>Type</th>
+                                   <th>Result</th>
+                               </tr>
+                             
+                           </thead>
+                           <tbody>
+                               {quiz && quiz.map((data:any,index:number) => {
+                                   
+                                   return (<tr>
+                                   <td>{index+1}</td>
+                                   <td>{data.quizDetail.SelectCategory}</td>
+                                   <td>{data.quizDetail.SelectDifficulty}</td>
+                                   <td>{data.quizDetail.NumberofQuestions}</td>
+                                   <td>{data.quizDetail.SelectType}</td>
+                                   <td>{data.quizResult ? "Pass" : "Fail"}</td>
+                                    </tr>
+                                )})}
+                               
+                             
+                           </tbody>
+                       </table>
+                   </div>
+                  }
                </div>
                </div>
              
@@ -135,8 +194,17 @@ interface Props {
     )
 }
 } 
-const mapStateToProps = (state:State) => ({
-    user : state
+const mapStateToProps = (state:any) => ({
+    user : state.user,
+    quiz :state.quiz
 })
-
-export default connect(mapStateToProps)(QuizEnter)
+const mapDispatchToProps = (dispatch:Dispatch) =>
+{
+    return bindActionCreators(
+        {
+            getUserQuizCompleted
+        },
+        dispatch
+    )
+}
+export default connect(mapStateToProps,mapDispatchToProps)(QuizEnter)

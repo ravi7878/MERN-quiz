@@ -21,10 +21,12 @@ router.post(
     const { name, email } = req.body;
     try {
       let user = await User.findOne({ email });
+
       if (user) {
         res.json({
-          name: name,
-          email: email,
+          id: user.id,
+          name: user.name,
+          email: user.email,
           msg: "Login Success",
           login: true,
         });

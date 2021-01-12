@@ -16,7 +16,8 @@ import "../Style/MainPage.css"
 interface State {
     showLoader: boolean;
     name:string,
-    email:string
+    email:string,
+    msg:string
 }
 interface Props extends RouteComponentProps<any> {
     user : any,
@@ -28,9 +29,10 @@ interface Props extends RouteComponentProps<any> {
     {
         super(props);
        this.state = {
-            showLoader : true,
+            showLoader : false,
             name:"",
-            email:""
+            email:"",
+            msg:""
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -48,19 +50,30 @@ interface Props extends RouteComponentProps<any> {
                     email:e.target.value
                 })
        }
-     
     }
+    // componentWillReceiveProps(nextProps:any)
+    // {  
+    //     this.setState({
+    //         showLoader:true,
+    //         msg:nextProps.user.user.msg
+    //     },()=>{
+    //         console.log(this.state)
+    //     })
+      
+    // }
     handleSubmit = () => {
+        const {loading ,user } = this.props.user
         this.props.userEnter(this.state.name, this.state.email)
-        console.log("submit",this.props.user)
-        // this.props.history.push("/quiz")
-        // this.props.userEnter("ravi","rkevadiya2@gmail.com")
+        this.props.history.push("/quiz")
     }
     render()
     {
         return (
          
            <div className="main-page">
+            {/* {this.state.showLoader &&   
+                // <div className="popup">{this.state.msg} </div> 
+            }            */}
            <div className="innder-div">
               <div className="form-div">
                   <div className="left-div"/>
