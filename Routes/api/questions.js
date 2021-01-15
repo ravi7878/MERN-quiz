@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
   } = req.body;
 
   request.get(
-    `https://opentdb.com/api.php?amount=${NumberofQuestions}&category=18&difficulty=${SelectDifficulty}&type=multiple`,
+    `https://opentdb.com/api.php?amount=${NumberofQuestions}&category=18&difficulty=${SelectDifficulty}&type=${SelectType}`,
     function optionalCallback(err, httpResponse, body) {
       const result = JSON.parse(body);
       result.results.forEach((element) => {

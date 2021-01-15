@@ -51,23 +51,15 @@ interface Props extends RouteComponentProps<any> {
                 })
        }
     }
-    // componentWillReceiveProps(nextProps:any)
-    // {  
-    //     this.setState({
-    //         showLoader:true,
-    //         msg:nextProps.user.user.msg
-    //     },()=>{
-    //         console.log(this.state)
-    //     })
-      
-    // }
     handleSubmit = () => {
-        const {loading ,user } = this.props.user
+        
         this.props.userEnter(this.state.name, this.state.email)
         this.props.history.push("/quiz")
     }
+
     render()
     {
+       
         return (
          
            <div className="main-page">

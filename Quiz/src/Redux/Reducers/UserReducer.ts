@@ -1,4 +1,4 @@
-import {ENTER_QUIZ,ENTER_QUIZ_FAIL,ENTER_QUIZ_SUCCESS,GET_QUIZ_DONE, User,UserDetail ,QuizDispatchTypes} from "../Action/QuizActionType"
+import {ENTER_QUIZ,ENTER_QUIZ_FAIL,ENTER_QUIZ_SUCCESS,GET_QUIZ_DONE,QuizDispatchTypes} from "../Action/QuizActionType"
 
 interface DefaultState{
     loading: boolean,
@@ -17,10 +17,12 @@ const UserReducer = (state:DefaultState = initialState,action:QuizDispatchTypes)
     {
         case ENTER_QUIZ_FAIL:
             return {
+                ...state,
                 loading:false
             }
         case ENTER_QUIZ:
             return {
+                ...state,
                 loading:true
             }
         case ENTER_QUIZ_SUCCESS:
