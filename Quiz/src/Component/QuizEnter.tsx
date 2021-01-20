@@ -1,11 +1,9 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import {connect } from "react-redux"
 import "../Style/QuizPage.css"
-import { Fade } from "react-awesome-reveal";
-import TransitionGroup from 'react-transition-group/TransitionGroup';
 import {getQuizQuestions,submitQuizResult} from "../Redux/Action/QuizAction"
 import {bindActionCreators, Dispatch} from "redux"
-  
+import Question from "./Question"
 interface State {
     showLoader: boolean,
     index:number,
@@ -57,7 +55,7 @@ interface Props {
   
     componentDidMount()
     {
-        const {user} = this.props
+        
     }
     componentWillReceiveProps(prevProps:any,nextProps:any)
     {
@@ -197,7 +195,7 @@ interface Props {
         let mcq:any = [] 
         if(questions.length > 0 && questions.length !== answer.length)
         {
-            mcq.push(questions[this.state.index].correct_answer,...questions[this.state.index].incorrect_answers)
+            mcq.push(questions[index].correct_answer,...questions[index].incorrect_answers)
         }
         
         return (
@@ -280,11 +278,7 @@ interface Props {
                     <div className="quiz-section-right">                 
                          {questions && !this.state.complete ? 
                         <div className="quiz-right-inner">
-                            <div className="quiz-question">
-                                <p>
-                                    {questions[this.state.index].question}
-                                </p>
-                            </div>
+                            <Question question={questions[index].question}/>
                          <div className="quiz-option">
                            <div>
                            {                      

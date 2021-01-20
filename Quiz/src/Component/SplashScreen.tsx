@@ -18,7 +18,7 @@ interface Props extends RouteComponentProps<any>{}
         return (
             <Fragment>
                  <div className="splash-screen" style={{
-                    backgroundImage:"url(" + "https://miro.medium.com/max/1600/1*e_Loq49BI4WmN7o9ItTADg.gif" + ")",
+                    backgroundImage: "url"+"("+ "https://miro.medium.com/max/1600/1*e_Loq49BI4WmN7o9ItTADg.gif"+")",
                     backgroundColor:"black"
                  }} >
                      <button className="btn-start" onClick={()=> this.props.history.push("/home")}>Start<span>

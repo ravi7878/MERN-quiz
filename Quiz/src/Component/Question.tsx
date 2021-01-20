@@ -2,8 +2,11 @@ import React, { Component, Fragment } from 'react'
 import { RouteComponentProps,withRouter  } from "react-router-dom";
 import "../Style/MainPage.css"
 interface State {}
-interface Props extends RouteComponentProps<any>{}
+interface Props extends RouteComponentProps<any>{
+    question:any
+}
  class Question extends Component<Props, State>{
+     
     constructor(props: Props)
     {
         super(props);
@@ -15,13 +18,11 @@ interface Props extends RouteComponentProps<any>{}
     {
         return (
             <Fragment>
-                 <div className="splash-screen" style={{
-                    backgroundImage:"url(" + "https://miro.medium.com/max/1600/1*e_Loq49BI4WmN7o9ItTADg.gif" + ")",
-                    backgroundColor:"black"
-                 }} >
-                     <button className="btn-start" onClick={()=> this.props.history.push("/home")}>Start<span>
-                         </span></button>
-                </div>  
+                 <div className="quiz-question">
+                    <p>
+                        {this.props.question}
+                    </p>
+                </div>
            </Fragment>
             
     )
