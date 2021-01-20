@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import {connect } from "react-redux"
 import "../Style/QuizPage.css"
-import {getQuizQuestions} from "../Redux/Action/QuizAction"
+import { Fade } from "react-awesome-reveal";
+import TransitionGroup from 'react-transition-group/TransitionGroup';
+import {getQuizQuestions,submitQuizResult} from "../Redux/Action/QuizAction"
 import {bindActionCreators, Dispatch} from "redux"
   
 interface State {
@@ -21,7 +23,8 @@ interface State {
 interface Props {
     quiz:any,
     user:any,
-    getQuizQuestions:any
+    getQuizQuestions:any,
+    submitQuizResult:any
 }
 
  class QuizEnter extends Component<Props, State>{
@@ -32,8 +35,8 @@ interface Props {
             showLoader : false,
             count:null,
             index:0,
-            difficulty:"",
-            type:"",
+            difficulty:"easy",
+            type:"multiple",
             user:[],
             quiz:[],
             answer:[],
@@ -97,7 +100,8 @@ interface Props {
     
     handleSubmit = () => {
         this.setState({
-            index:0
+            index:0,
+            showLoader:true
         })
         const {count , difficulty , type} = this.state
         this.props.getQuizQuestions(count,difficulty,type)
@@ -161,7 +165,7 @@ interface Props {
                         answerSelected:false,
                         selectedAnswer:""
                     },()=>{
-                        // console.log(this.state.answer)
+                        console.log(this.state.answer)
                     })
                 }
                
@@ -172,8 +176,12 @@ interface Props {
     handleFinish()
     {
         const result =  Math.floor((this.state.answer.filter((item:any)=>{return item.result === "correct"}).length / this.state.answer.length) * 100 )
-                         
-        console.log(this.props.user.user.id , result , this.state.count,this.state.type,this.state.difficulty)
+        this.props.submitQuizResult(this.props.user.user.id,this.state.answer , result , this.state.count,this.state.type,this.state.difficulty)              
+        this.setState({
+            showLoader:false,
+            questions:[],
+            complete:false
+        })
     }
     handleAnswer(e:any)
     {
@@ -191,9 +199,8 @@ interface Props {
         {
             mcq.push(questions[this.state.index].correct_answer,...questions[this.state.index].incorrect_answers)
         }
-       
+        
         return (
-         
            <div className="quiz-page">
                <div className="quiz-container">
                <div className="top-detail-bar">
@@ -219,7 +226,7 @@ interface Props {
                     <button className="btn-enter" onClick={this.handleSubmit}>Enter Quiz<span></span></button>
                </div>
                <div className="quiz-section">
-                  {questions.length > 0 ? <div className="quiz-section-main">  
+                  {questions.length > 0 && this.state.answer && this.state.showLoader ? <div className="quiz-section-main">  
                     <div className="quiz-section-left">
                        <div className="quiz-left-upper">
                             <div className="quiz-counter">
@@ -230,9 +237,12 @@ interface Props {
                                         style={{
                                             backgroundColor: answer.some( (answer:any) => answer['index'] === index && answer['skiped'] === false  ) ? "red" : 
                                             // answer.some( (answer:any) => answer['skiped']) ? "pink" : 
-                                            this.state.index === index ? "green" : "orange"
+                                            this.state.index === index ? "green" : "orange",
+                                            cursor:"pointer"
                                         }}
-                                        className="count">
+                                        className="count"
+                                        onClick={()=>{this.setState({index:index})}}
+                                        >
                                     {index +1}
                                     </div>
                                 )
@@ -242,7 +252,7 @@ interface Props {
                                     <div 
                                         key={index} 
                                         style={{
-                                            backgroundColor: data.result === "correct" ? "green" :  "red" 
+                                            backgroundColor: data.result === "correct" ? "green" : data.skiped? "#000080": "red" 
                                         }}
                                         className="count">
                                     {index +1}
@@ -254,41 +264,47 @@ interface Props {
                             </div>
                         </div>
                         <div className="quiz-left-lower">
-{/*                            
-                           <p>Total Questions :- {this.state.count}</p>
-                           <p>Difficulty :- {this.state.difficulty}</p>
-                           <p>type :- {this.state.type}</p> */}
+                            <div className="detail-div" >
+                                <p>Total Questions :- {this.state.count}</p>
+                            </div>
+                            <div className="detail-div">
+                                <p>Difficulty :- {this.state.difficulty}</p>
+                            </div>     
+                            <div className="detail-div">
+                               <p>type :- {this.state.type}</p>
+                            </div>
 
                         </div>
                     </div>
                    
-                    <div className="quiz-section-right">
+                    <div className="quiz-section-right">                 
                          {questions && !this.state.complete ? 
                         <div className="quiz-right-inner">
-                           
                             <div className="quiz-question">
-                                <p >
-                                {questions[this.state.index].question}
+                                <p>
+                                    {questions[this.state.index].question}
                                 </p>
                             </div>
-                            <div className="quiz-option">
-                                <div>
-                                {                      
-                                mcq.map((data:any,index:number)=>{
-                                    return <div className="quiz-option-div active">
-                                         <input className="radio" type="radio"  value={data} name="gender" onChange={this.handleAnswer} /> {data}
-                                    </div>
-                                })
-                                }
-                                </div>       
-                            </div>
+                         <div className="quiz-option">
+                           <div>
+                           {                      
+                           mcq.map((data:any,index:number)=>{
+                              
+                               return <div className="quiz-option-div active">
+                                    <input className="radio" type="radio"  value={data} name="gender" onChange={this.handleAnswer} /> {data}
+                               </div>
+                           })
+                           }
+                           </div>       
+                       </div>               
                             <div className="quiz-action">
                                 <div>
                                     <button className="btn-next" disabled={!this.state.answerSelected} onClick={this.handleNext}>Next<span></span></button>
                                     <button className="btn-skip" onClick={this.handleSkip}>Skip<span></span></button>
                                 </div>
                             </div>
-                        </div> : 
+                        </div>
+                         : 
                          <div className="quiz-right-inner">
                            <div className="quiz-complete-result">
                                 <div className="quiz-result-header">
@@ -299,17 +315,17 @@ interface Props {
                                         <thead>
                                             <tr>
                                                 <th>Qesution No </th>
-                                                <th>Answer  </th>
+                                                <th>Answer(Correct Answer)  </th>
                                                 <th>Result  </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {this.state.answer.map((data:any,index:number) => {
                                                 return(
-                                                    <tr style={{backgroundColor:data.result === "incorrect" ? "#a50e0ea4" : "#0b992aa4" }}>
+                                                    <tr style={{backgroundColor:data.result === "incorrect" ?  "#a50e0ea4" : data.skiped ? "#000080" : "#0b992aa4" }}>
                                                     <td>{index+1}</td>
-                                                    <td>{data.answer}</td>
-                                                    <td >{data.result}</td>
+                                                    <td>{data.skiped ? "skiped":data.result === "correct" ? data.answer : data.answer + "(" +this.state.questions[index].correct_answer + ")" }  </td>
+                                                    <td >{data.skiped ? "skiped":data.result}</td>
                                                     </tr>
                                                 )                                               
                                             })}
@@ -344,7 +360,7 @@ interface Props {
                                    <th>Id</th>
                                    <th>Catagory</th>
                                    <th>Difficulty</th>
-                                   <th>Total Quesions</th>
+                                   <th>Total Quesions/Correct Answer</th>
                                    <th>Type</th>
                                    <th>Result</th>
                                </tr>
@@ -353,17 +369,16 @@ interface Props {
                            <tbody>
                                {quiz && quiz.map((data:any,index:number) => {
                                    
-                                   return (<tr>
+                                   return (
+                                   <tr style={{backgroundColor:data.quizResult ?"#0b992aa4": "#a50e0ea4"}}>
                                    <td>{index+1}</td>
                                    <td>{data.quizDetail.SelectCategory}</td>
                                    <td>{data.quizDetail.SelectDifficulty}</td>
-                                   <td>{data.quizDetail.NumberofQuestions}</td>
+                                   <td>{data.quizDetail.NumberofQuestions + "/" + data.quizDetail.CorrectAnswer}</td>
                                    <td>{data.quizDetail.SelectType}</td>
                                    <td>{data.quizResult ? "Pass" : "Fail"}</td>
                                     </tr>
                                 )})}
-                               
-                             
                            </tbody>
                        </table>
                    </div>
@@ -384,7 +399,8 @@ const mapDispatchToProps = (dispatch:Dispatch) =>
 {
     return bindActionCreators(
         {
-            getQuizQuestions
+            getQuizQuestions,
+            submitQuizResult
         },
         dispatch
     )

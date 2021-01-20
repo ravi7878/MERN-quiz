@@ -1,4 +1,4 @@
-import {GET_QUIZ_QUESTIONS ,QuizDispatchTypes} from "../Action/QuizActionType"
+import {GET_QUIZ_QUESTIONS,RESET_QUESTIONS ,QuizDispatchTypes} from "../Action/QuizActionType"
 
 interface DefaultState{
     loading: boolean,
@@ -14,6 +14,11 @@ const QuizReducer = (state:DefaultState = initialState,action:QuizDispatchTypes)
     switch(action.type)
     {
         case GET_QUIZ_QUESTIONS:
+            return {
+                ...state,
+                questions:action.payload
+            }
+        case RESET_QUESTIONS:
             return {
                 ...state,
                 questions:action.payload
