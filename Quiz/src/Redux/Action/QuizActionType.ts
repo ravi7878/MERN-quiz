@@ -3,6 +3,7 @@ export const ENTER_QUIZ_FAIL = "ENTER_QUIZ_FAIL"
 export const ENTER_QUIZ_SUCCESS = "ENTER_QUIZ_SUCCESS"
 export const GET_QUIZ_DONE = "GET_QUIZ_DONE"
 export const GET_QUIZ_QUESTIONS = "GET_QUIZ_QUESTIONS"
+export const RESET_QUESTIONS = "RESET_QUESTIONS"
 export type UserDetail = {
     detail : {
         name:String,
@@ -49,4 +50,9 @@ export interface GetQuestion {
     type : typeof GET_QUIZ_QUESTIONS,
     payload : QuestionsFetch
 }
-export type QuizDispatchTypes = EnterQuiz | EnterQuizFail | EnterQuizSuccess | GetQuizDone | GetQuestion
+
+export interface ResetQustions {
+    type : typeof RESET_QUESTIONS,
+    payload : []
+}
+export type QuizDispatchTypes = EnterQuiz | EnterQuizFail | EnterQuizSuccess | GetQuizDone | GetQuestion | ResetQustions
