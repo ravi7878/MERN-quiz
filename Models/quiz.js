@@ -7,6 +7,7 @@ const QuizSchema = new mongoose.Schema({
   },
   quizDetail: {
     NumberofQuestions: Number,
+    CorrectAnswer: Number,
     SelectCategory: String,
     SelectDifficulty: String,
     SelectType: String,

@@ -21,15 +21,28 @@ router.post(
     const { name, email } = req.body;
     try {
       let user = await User.findOne({ email });
+
       if (user) {
-        res.json({ msg: "userExist" });
+        res.json({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          msg: "Login Success",
+          login: true,
+        });
+      } else {
+        user = new User({
+          name: name,
+          email: email,
+        });
+        await user.save();
+        res.json({
+          name: name,
+          email: email,
+          msg: "Registered Successfully",
+          registeration: true,
+        });
       }
-      user = new User({
-        name: name,
-        email: email,
-      });
-      await user.save();
-      res.json({ msg: "User Registered Successfully" });
     } catch (err) {
       res.status(500).send("server error");
     }
